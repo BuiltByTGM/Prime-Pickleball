@@ -62,11 +62,17 @@
       video.setAttribute("playsinline", "");
       video.setAttribute("webkit-playsinline", "");
       playButton.hidden = true;
+      // Jump first so the start of the tour is visible, even after the long 3D hero.
+      // Temporarily override the site's global smooth-scrolling CSS.
+      const oldScrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      section.scrollIntoView({ behavior: "auto", block: "start" });
+      document.documentElement.style.scrollBehavior = oldScrollBehavior;
+      if (video.readyState >= 1) video.currentTime = 0;
       const playback = video.play();
       if (playback && typeof playback.catch === "function") {
         playback.catch(() => { playButton.hidden = false; });
       }
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     return true;
   }
